@@ -143,7 +143,7 @@ begin
 
         task "clone_rubygems_#{rg}" do
           unless File.directory?(RUBYGEMS_REPO)
-            system("git clone https://github.com/rubygems/rubygems.git tmp/rubygems")
+            system("git clone --recursive https://github.com/rubygems/rubygems.git tmp/rubygems")
           end
           hash = nil
 
@@ -155,6 +155,7 @@ begin
               else
                 system("git checkout #{rg}") || raise("Unknown Rubygems ref #{rg}")
               end
+              system("git submodule update --init --recursive")
               hash = `git rev-parse HEAD`.chomp
             end
           elsif rg != "master"
